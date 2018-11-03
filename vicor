@@ -1,0 +1,58 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+videodir='/storage/0123-4567/DCIM/Camera'
+outputdir="${HOME}/vicor/data"
+factor=0.375
+
+function yesno {
+  while true; do
+    read -p "$1 (y/n) " -n 1 ans
+    if [ "${ans}" == "y" ]; then
+      echo
+      return 0
+    elif [ "${ans}" == "n" ]; then
+      echo
+      return 1
+    fi
+  done
+}
+
+cd "${videodir}"
+ls *.mp4
+
+for file in *.mp4; do
+  history -s "${file}"
+done
+
+read -e -p '> ' file
+if [ -z "${file}" ]; then
+  last="$(ls *.mp4 |tail -n 1)"
+  read -e -p '> ' -i "${last}" file
+fi
+
+if [ ! -e "${file}" ]; then
+  echo 'Bailing out' >&2
+  exit 1
+fi
+
+outfile="${outputdir}/$(basename "${file}" .mp4).mp4"
+  
+termux-wake-lock
+
+ffmpeg -i "${file}" \
+  -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
+  -codec:a libmp3lame \
+  -qscale:a 7 \
+  -c:v libx264 \
+  -preset medium \
+  -crf 23 \
+  "${outfile}"
+
+termux-wake-unlock
+
+echo
+ls -lh "${outfile}"
+
+yesno 'view?' && termux-open "${outfile}"
+yesno 'send?' && termux-share -a send "${outfile}"
+yesno 'delete?' && rm "${outfile}"
