@@ -48,6 +48,7 @@ ffmpeg -i "${file}" \
   -crf 23 \
   "${outfile}"
 
+termux-vibrate
 termux-wake-unlock
 
 echo
