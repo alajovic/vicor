@@ -4,19 +4,6 @@ videodir='/storage/0123-4567/DCIM/Camera'
 outputdir="${HOME}/vicor/data"
 factor=0.375
 
-function yesno {
-  while true; do
-    read -p "$1 (y/n) " -n 1 ans
-    if [ "${ans}" == "y" ]; then
-      echo
-      return 0
-    elif [ "${ans}" == "n" ]; then
-      echo
-      return 1
-    fi
-  done
-}
-
 cd "${videodir}"
 ls *.mp4
 
@@ -50,10 +37,21 @@ ffmpeg -i "${file}" \
 
 termux-vibrate
 termux-wake-unlock
-
 echo
+
 ls -lh "${outfile}"
 
-yesno 'view?' && termux-open "${outfile}"
-yesno 'send?' && termux-share -a send "${outfile}"
-yesno 'delete?' && rm "${outfile}"
+while true; do
+  read -p "[v]iew [s]end [r]emove [quit] " -n 1 ans
+  echo
+
+  case "${ans}" in
+    v) termux-open "${outfile}" ;;
+    s) termux-share -a send "${outfile}" ;;
+    r)
+      rm "${outfile}"
+      break
+      ;;
+    q) break ;;
+  esac
+done
