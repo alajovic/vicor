@@ -42,7 +42,7 @@ echo
 ls -lh "${outfile}"
 
 while true; do
-  read -p "[v]iew [s]end [r]emove [quit] " -n 1 ans
+  read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
   echo
 
   case "${ans}" in
