@@ -23,17 +23,37 @@ if [ ! -e "${file}" ]; then
 fi
 
 outfile="${outputdir}/$(basename "${file}" .mp4).mp4"
+
+while true; do
+read -p "[n]ormal [s]mall " -n 1 ans
+echo
+
+  case "${ans}" in
+    n) break ;;
+    s) break ;;
+  esac
+done
   
 termux-wake-lock
 
-ffmpeg -i "${file}" \
-  -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
-  -codec:a libmp3lame \
-  -qscale:a 7 \
-  -c:v libx264 \
-  -preset medium \
-  -crf 23 \
-  "${outfile}"
+if [[ "$ans" == "s" ]] ; then
+    ffmpeg -i "${file}" \
+    -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
+    -codec:a libmp3lame \
+    -qscale:a 7 \
+    -c:v libx264 \
+    -preset medium \
+    -crf 23 \
+    "${outfile}"
+elif [[ "$ans" == "n" ]] ; then
+    ffmpeg -i "${file}" \
+    -acodec copy \
+    -vcodec libx264 \
+    -profile:v high \
+    "${outfile}"
+else
+    exit 1
+fi
 
 termux-vibrate
 termux-wake-unlock
