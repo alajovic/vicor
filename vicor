@@ -2,7 +2,7 @@
 
 videodir='/storage/0123-4567/DCIM/Camera'
 outputdir="${HOME}/vicor/data"
-factor=0.375
+maxsize=640
 
 cd "${videodir}"
 ls *.mp4
@@ -39,7 +39,7 @@ termux-wake-lock
 if [[ "$ans" == "s" ]] ; then
     ffmpeg -i "${file}" \
     -acodec copy \
-    -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
+    -filter:v scale="w=(trunc(min(a*$maxsize\,$maxsize)/2)*2):h=(trunc(min($maxsize/a\,$maxsize)/2)*2)" \
     -c:v libx264 \
     -profile:v high \
     -preset medium \
