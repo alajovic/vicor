@@ -41,6 +41,7 @@ if [[ "$ans" == "s" ]] ; then
     -acodec copy \
     -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
     -c:v libx264 \
+    -profile:v high \
     -preset medium \
     -crf 23 \
     "${outfile}"
