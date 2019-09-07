@@ -38,9 +38,8 @@ termux-wake-lock
 
 if [[ "$ans" == "s" ]] ; then
     ffmpeg -i "${file}" \
+    -acodec copy \
     -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
-    -codec:a libmp3lame \
-    -qscale:a 7 \
     -c:v libx264 \
     -preset medium \
     -crf 23 \
