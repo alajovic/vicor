@@ -40,6 +40,7 @@ done
 
 if is_termux; then
     termux-wake-lock
+    trap termux-wake-unlock EXIT
 fi
 
 if [[ "$ans" == "s" ]] ; then
@@ -64,6 +65,7 @@ fi
 if is_termux; then
     termux-vibrate
     termux-wake-unlock
+    trap - EXIT
     open_command='termux-open'
     send_command='termux-share -a send'
 else
