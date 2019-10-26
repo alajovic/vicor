@@ -46,7 +46,7 @@ fi
 
 if [[ "$ans" == "s" ]] ; then
     ffmpeg -i "${file}" \
-    -acodec copy \
+    -c:a aac -q:a 0.7 \
     -filter:v scale="w=(trunc(min(a*$maxsize\,$maxsize)/2)*2):h=(trunc(min($maxsize/a\,$maxsize)/2)*2)" \
     -c:v libx264 \
     -profile:v high \
