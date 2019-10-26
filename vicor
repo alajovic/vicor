@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-videodir='/storage/0123-4567/DCIM/Camera'
-outputdir="${HOME}/vicor/data"
-maxsize=640
+videodir="${VICOR_VIDEO_DIR:-/storage/0123-4567/DCIM/Camera}"
+outputdir="${VICOR_OUTPUT_DIR:-${HOME}/vicor/data}"
+maxsize="${VICOR_MAX_SIZE:-640}"
 
 function is_termux() {
     command -v termux-wake-lock > /dev/null 2>&1
