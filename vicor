@@ -30,11 +30,11 @@ fi
 outfile="${outputdir}/$(basename "${file}" .${suffix}).${suffix}"
 
 while true; do
-    read -p "[n]ormal [s]mall " -n 1 ans
+    read -p "Video size: [o]original [s]mall " -n 1 ans
     echo
 
     case "${ans}" in
-        n) break ;;
+        o) break ;;
         s) break ;;
     esac
 done
@@ -53,7 +53,7 @@ if [[ "$ans" == "s" ]] ; then
     -preset medium \
     -crf 23 \
     "${outfile}"
-elif [[ "$ans" == "n" ]] ; then
+elif [[ "$ans" == "o" ]] ; then
     ffmpeg -i "${file}" \
     -acodec copy \
     -vcodec libx264 \
