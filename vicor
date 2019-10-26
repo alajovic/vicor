@@ -3,21 +3,22 @@
 videodir="${VICOR_VIDEO_DIR:-/storage/0123-4567/DCIM/Camera}"
 outputdir="${VICOR_OUTPUT_DIR:-${HOME}/vicor/data}"
 maxsize="${VICOR_MAX_SIZE:-640}"
+suffix="${VICOR_FILE_SUFFIX:-mp4}"
 
 function is_termux() {
     command -v termux-wake-lock > /dev/null 2>&1
 }
 
 cd "${videodir}"
-ls *.mp4
+ls *.${suffix}
 
-for file in *.mp4; do
+for file in *.${suffix}; do
     history -s "${file}"
 done
 
 read -e -p '> ' file
 if [ -z "${file}" ]; then
-    last="$(ls *.mp4 |tail -n 1)"
+    last="$(ls *.${suffix} |tail -n 1)"
     read -e -p '> ' -i "${last}" file
 fi
 
@@ -26,7 +27,7 @@ if [ ! -e "${file}" ]; then
     exit 1
 fi
 
-outfile="${outputdir}/$(basename "${file}" .mp4).mp4"
+outfile="${outputdir}/$(basename "${file}" .${suffix}).${suffix}"
 
 while true; do
     read -p "[n]ormal [s]mall " -n 1 ans
