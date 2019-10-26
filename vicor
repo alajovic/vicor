@@ -12,30 +12,30 @@ cd "${videodir}"
 ls *.mp4
 
 for file in *.mp4; do
-  history -s "${file}"
+    history -s "${file}"
 done
 
 read -e -p '> ' file
 if [ -z "${file}" ]; then
-  last="$(ls *.mp4 |tail -n 1)"
-  read -e -p '> ' -i "${last}" file
+    last="$(ls *.mp4 |tail -n 1)"
+    read -e -p '> ' -i "${last}" file
 fi
 
 if [ ! -e "${file}" ]; then
-  echo 'Bailing out' >&2
-  exit 1
+    echo 'Bailing out' >&2
+    exit 1
 fi
 
 outfile="${outputdir}/$(basename "${file}" .mp4).mp4"
 
 while true; do
-read -p "[n]ormal [s]mall " -n 1 ans
-echo
+    read -p "[n]ormal [s]mall " -n 1 ans
+    echo
 
-  case "${ans}" in
-    n) break ;;
-    s) break ;;
-  esac
+    case "${ans}" in
+        n) break ;;
+        s) break ;;
+    esac
 done
 
 if is_termux; then
@@ -83,10 +83,8 @@ while true; do
     case "${ans}" in
         v) $open_command "${outfile}" ;;
         s) $send_command "${outfile}" ;;
-        r)
-        rm "${outfile}"
-        break
-        ;;
+        r) rm "${outfile}"
+           break ;;
         q) break ;;
     esac
 done
