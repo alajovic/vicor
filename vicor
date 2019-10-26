@@ -4,6 +4,10 @@ videodir='/storage/0123-4567/DCIM/Camera'
 outputdir="${HOME}/vicor/data"
 maxsize=640
 
+function is_termux() {
+    command -v termux-wake-lock > /dev/null 2>&1
+}
+
 cd "${videodir}"
 ls *.mp4
 
@@ -33,8 +37,10 @@ echo
     s) break ;;
   esac
 done
-  
-termux-wake-lock
+
+if is_termux; then
+    termux-wake-lock
+fi
 
 if [[ "$ans" == "s" ]] ; then
     ffmpeg -i "${file}" \
@@ -55,23 +61,30 @@ else
     exit 1
 fi
 
-termux-vibrate
-termux-wake-unlock
-echo
+if is_termux; then
+    termux-vibrate
+    termux-wake-unlock
+    open_command='termux-open'
+    send_command='termux-share -a send'
+else
+    open_command='xdg-open'
+    send_command='xdg-email --attach'
+fi
 
+echo
 ls -lh "${outfile}"
 
 while true; do
-  read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
-  echo
+    read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
+    echo
 
-  case "${ans}" in
-    v) termux-open "${outfile}" ;;
-    s) termux-share -a send "${outfile}" ;;
-    r)
-      rm "${outfile}"
-      break
-      ;;
-    q) break ;;
-  esac
+    case "${ans}" in
+        v) $open_command "${outfile}" ;;
+        s) $send_command "${outfile}" ;;
+        r)
+        rm "${outfile}"
+        break
+        ;;
+        q) break ;;
+    esac
 done
