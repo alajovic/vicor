@@ -1,57 +1,92 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-videodir='/storage/0123-4567/DCIM/Camera'
-outputdir="${HOME}/vicor/data"
-factor=0.375
+videodir="${VICOR_VIDEO_DIR:-/storage/0123-4567/DCIM/Camera}"
+outputdir="${VICOR_OUTPUT_DIR:-${HOME}/vicor/data}"
+maxsize="${VICOR_MAX_SIZE:-720}"
+aacquality="${VICOR_AAC_QUALITY:-0.7}"
+suffix="${VICOR_FILE_SUFFIX:-mp4}"
+
+function is_termux() {
+    command -v termux-wake-lock > /dev/null 2>&1
+}
 
 cd "${videodir}"
-ls *.mp4
+ls *.${suffix}
 
-for file in *.mp4; do
-  history -s "${file}"
+for file in *.${suffix}; do
+    history -s "${file}"
 done
 
 read -e -p '> ' file
 if [ -z "${file}" ]; then
-  last="$(ls *.mp4 |tail -n 1)"
-  read -e -p '> ' -i "${last}" file
+    last="$(ls *.${suffix} |tail -n 1)"
+    read -e -p '> ' -i "${last}" file
 fi
 
 if [ ! -e "${file}" ]; then
-  echo 'Bailing out' >&2
-  exit 1
+    echo 'Bailing out' >&2
+    exit 1
 fi
 
-outfile="${outputdir}/$(basename "${file}" .mp4).mp4"
-  
-termux-wake-lock
+outfile="${outputdir}/$(basename "${file}" .${suffix}).${suffix}"
 
-ffmpeg -i "${file}" \
-  -filter:v scale="trunc(iw*${factor}/2)*2:trunc(ih*${factor}/2)*2" \
-  -codec:a libmp3lame \
-  -qscale:a 7 \
-  -c:v libx264 \
-  -preset medium \
-  -crf 23 \
-  "${outfile}"
+while true; do
+    read -p "Video size: [o]original [s]mall " -n 1 ans
+    echo
 
-termux-vibrate
-termux-wake-unlock
+    case "${ans}" in
+        o) break ;;
+        s) break ;;
+    esac
+done
+
+if is_termux; then
+    termux-wake-lock
+    trap termux-wake-unlock EXIT
+fi
+
+if [[ "$ans" == "s" ]] ; then
+    ffmpeg -i "${file}" \
+    -c:a aac -q:a ${aacquality} \
+    -filter:v scale="w=(trunc(min(a*$maxsize\,$maxsize)/2)*2):h=(trunc(min($maxsize/a\,$maxsize)/2)*2)" \
+    -c:v libx264 \
+    -profile:v high \
+    -preset medium \
+    -crf 23 \
+    "${outfile}"
+elif [[ "$ans" == "o" ]] ; then
+    ffmpeg -i "${file}" \
+    -acodec copy \
+    -vcodec libx264 \
+    -profile:v high \
+    "${outfile}"
+else
+    exit 1
+fi
+
+if is_termux; then
+    termux-vibrate
+    termux-wake-unlock
+    trap - EXIT
+    open_command='termux-open'
+    send_command='termux-share -a send'
+else
+    open_command='xdg-open'
+    send_command='xdg-email --attach'
+fi
+
 echo
-
 ls -lh "${outfile}"
 
 while true; do
-  read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
-  echo
+    read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
+    echo
 
-  case "${ans}" in
-    v) termux-open "${outfile}" ;;
-    s) termux-share -a send "${outfile}" ;;
-    r)
-      rm "${outfile}"
-      break
-      ;;
-    q) break ;;
-  esac
+    case "${ans}" in
+        v) $open_command "${outfile}" ;;
+        s) $send_command "${outfile}" ;;
+        r) rm "${outfile}"
+           break ;;
+        q) break ;;
+    esac
 done
