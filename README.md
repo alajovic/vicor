@@ -11,8 +11,10 @@ a phone are larger than they need to be. `vicor` offers two modes:
 
 It has a very simple user interface:
 
-  - it shows the list of video files, with TAB completion and with the
-    newest videos available by pressing ↑;
+  - it shows the list of available video files;
+  - to select the latest video, simply press ENTER twice
+  - older videos can be selected by pressing ↑ or entering a filename
+    (TAB completion is supported);
   - selecting the encoding mode is one key tap;
   - encoding may take a while, so you can carry the phone in your
     pocket and `vicor` will vibrate when finished;
