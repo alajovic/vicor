@@ -3,7 +3,7 @@
 videodir="${VICOR_VIDEO_DIR:-/storage/0123-4567/DCIM/Camera}"
 outputdir="${VICOR_OUTPUT_DIR:-${HOME}/vicor/data}"
 maxsize="${VICOR_MAX_SIZE:-720}"
-aacquality="${VICOR_AAC_QUALITY:-0.7}"
+aacquality="${VICOR_AAC_QUALITY:-2.0}"
 suffix="${VICOR_FILE_SUFFIX:-mp4}"
 
 function is_termux() {
