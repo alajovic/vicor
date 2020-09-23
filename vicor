@@ -3,7 +3,7 @@
 videodir="${VICOR_VIDEO_DIR:-/storage/0123-4567/DCIM/Camera}"
 outputdir="${VICOR_OUTPUT_DIR:-${HOME}/vicor/data}"
 maxsize="${VICOR_MAX_SIZE:-720}"
-aacquality="${VICOR_AAC_QUALITY:-0.7}"
+aacquality="${VICOR_AAC_QUALITY:-2.0}"
 suffix="${VICOR_FILE_SUFFIX:-mp4}"
 
 function is_termux() {
@@ -76,7 +76,8 @@ else
 fi
 
 echo
-ls -lh "${outfile}"
+echo "Old file: $(du -h "${videodir}/${file}")"
+echo "New file: $(du -h "${outfile}")"
 
 while true; do
     read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
