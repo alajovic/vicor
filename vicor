@@ -34,7 +34,7 @@ while true; do
     read -p "Video size: [o]original [s]mall " -n 1 ans
     echo
 
-    case "${ans}" in
+    case "${ans,,}" in
         o) break ;;
         s) break ;;
     esac
@@ -45,7 +45,7 @@ if is_termux; then
     trap termux-wake-unlock EXIT
 fi
 
-if [[ "$ans" == "s" ]] ; then
+if [[ "${ans,,}" == "s" ]] ; then
     ffmpeg -i "${file}" \
     -c:a aac -q:a ${aacquality} \
     -filter:v scale="w=(trunc(min(a*$maxsize\,$maxsize)/2)*2):h=(trunc(min($maxsize/a\,$maxsize)/2)*2)" \
@@ -54,7 +54,7 @@ if [[ "$ans" == "s" ]] ; then
     -preset medium \
     -crf 23 \
     "${outfile}"
-elif [[ "$ans" == "o" ]] ; then
+elif [[ "${ans,,}" == "o" ]] ; then
     ffmpeg -i "${file}" \
     -acodec copy \
     -vcodec libx264 \
@@ -83,7 +83,7 @@ while true; do
     read -p "[v]iew [s]end [r]emove [q]uit " -n 1 ans
     echo
 
-    case "${ans}" in
+    case "${ans,,}" in
         v) $open_command "${outfile}" ;;
         s) $send_command "${outfile}" ;;
         r) rm "${outfile}"
