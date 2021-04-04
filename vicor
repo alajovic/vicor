@@ -10,21 +10,27 @@ function is_termux() {
     command -v termux-wake-lock > /dev/null 2>&1
 }
 
-cd "${videodir}"
-ls *.${suffix}
+if [ -n "$1" ]; then
+    file="$1"
+else
+    cd "${videodir}"
+    ls *.${suffix}
 
-for file in *.${suffix}; do
-    history -s "${file}"
-done
+    for file in *.${suffix}; do
+        history -s "${file}"
+    done
 
-read -e -p '> ' file
-if [ -z "${file}" ]; then
-    last="$(ls *.${suffix} |tail -n 1)"
-    read -e -p '> ' -i "${last}" file
+    read -e -p '> ' file
+    if [ -z "${file}" ]; then
+        last="$(ls *.${suffix} |tail -n 1)"
+        read -e -p '> ' -i "${last}" file
+    fi
+
+    file="${videodir}/${file}"
 fi
 
 if [ ! -e "${file}" ]; then
-    echo 'Bailing out' >&2
+    echo "File '${file}' does not exist, bailing out." >&2
     exit 1
 fi
 
@@ -76,7 +82,7 @@ else
 fi
 
 echo
-echo "Old file: $(du -h "${videodir}/${file}")"
+echo "Old file: $(du -h "${file}")"
 echo "New file: $(du -h "${outfile}")"
 
 while true; do
