@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">vicor</string>
+    <string name="no_videos">No videos found.</string>
+    <string name="need_permission">vicor needs access to your videos to list them.</string>
+    <string name="grant">Grant access</string>
+    <string name="video_size">Video size</string>
+    <string name="mode_original">Original</string>
+    <string name="mode_small">Small</string>
+    <string name="max_size">Max size (px)</string>
+    <string name="keep_audio">Keep audio</string>
+    <string name="encode">Encode</string>
+    <string name="cancel">Cancel</string>
+    <string name="encoding">Encoding %1$s…</string>
+    <string name="view">View</string>
+    <string name="send">Send</string>
+    <string name="remove">Remove</string>
+    <string name="done">Done</string>
+    <string name="result">Old file: %1$s\nNew file: %2$s (%3$d%%)\nSaved to Movies/vicor</string>
+    <string name="failed">Encoding failed: %1$s</string>
+    <string name="removed">Removed.</string>
+    <string name="channel_name">Encoding</string>
+    <string name="notif_done">Finished %1$s</string>
+    <string name="notif_failed">Failed %1$s</string>
+</resources>

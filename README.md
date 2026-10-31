@@ -21,6 +21,9 @@ It has a very simple user interface:
   - it will offer an option to view, send or remove the video, or just
     let it be.
 
+There is also a native Android app that needs no Termux or ffmpeg, see
+[android/README.md](android/README.md).
+
 ### Usage example
 
 
